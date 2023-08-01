@@ -19,19 +19,24 @@ import ReactQuill from 'react-quill';
 import NoteEditor, { modules, formats } from '../noteeditor/NoteEditor'
 import "react-quill/dist/quill.snow.css";
 
-const Note = ({title, bodyText, onDeleteNote, onUpdateNote, setEditModalOpen}) => {
+const Note = ({ 
+  title, 
+  bodyText, 
+  onDeleteNote, 
+  onUpdateNote, 
+}) => {
     const [isExpanded, setIsExpanded] = useState(false);
-    const [editModalOpen, setEditModalOpenLocal] = useState(false);
+    const [editModalOpen, setEditModalOpen] = useState(false);
     const [newTitle, setNewTitle] = useState(title);
     const [newBodyText, setNewBodyText] = useState(bodyText);
 
     const handleEditModalOpen = () => {
-      setEditModalOpenLocal(true);
-    }
-
+      setEditModalOpen(true);
+    };
+  
     const handleEditModalClose = () => {
-      setEditModalOpenLocal(false);
-    }
+      setEditModalOpen(false);
+    };
 
     const handleSaveChanges = async () => {
       const updatedNote = {
@@ -39,8 +44,7 @@ const Note = ({title, bodyText, onDeleteNote, onUpdateNote, setEditModalOpen}) =
         bodyText: newBodyText,
       };
       try {
-        await api.put(`/api/notes/id/${noteId}`, updatedNote);
-        // Close the modal after successful PUT request
+        await onUpdateNote(updatedNote);
         setEditModalOpen(false);
       } catch (error) {
         console.error(error);

@@ -8,15 +8,6 @@ const App = () => {
   const [notes, setNotes] = useState([]);
   const [newNoteTitle, setNewNoteTitle] = useState('');
   const [newNoteBody, setNewNoteBody] = useState('');
-  const [editModalOpen, setEditModalOpen] = useState(false);
-
-  const openEditModal = () => {
-    setEditModalOpen(true);
-  };
-
-  const closeEditModal = () => {
-    setEditModalOpen(false);
-  };
 
 
   const getNotes = async () => {
@@ -45,13 +36,10 @@ const App = () => {
     }
   };
 
-  const updateNote = async (noteId) => {
-    const updatedNote = {
-      title: newNoteTitle,
-      bodyText: newNoteBody,
-    };
+  const updateNote = async (noteId, updatedNote) => {
     try {
       await api.put(`/api/notes/id/${noteId}`, updatedNote);
+      setNotes([...notes, updatedNote]);
     } catch (error) {
       console.error(error)
     }
@@ -85,9 +73,7 @@ const App = () => {
         newNoteBody={newNoteBody}
         setNewNoteBody={setNewNoteBody}
         onDeleteNote={deleteNote}
-        onUpdateNote={updateNote}
-        editModalOpen={editModalOpen}
-        setEditModalOpen={setEditModalOpen}
+        onUpdateNote={(noteId, updatedNote) => updateNote(noteId, updatedNote)}
       />
     </div>
   );

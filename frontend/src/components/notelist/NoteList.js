@@ -1,6 +1,15 @@
 import Note from '../note/Note';
 
-const NoteList = ({ notes, onAddNote, newNoteTitle, setNewNoteTitle, newNoteBody, setNewNoteBody, onDeleteNote, onUpdateNote }) => {
+const NoteList = ({ 
+    notes, 
+    onAddNote, 
+    newNoteTitle, 
+    setNewNoteTitle, 
+    newNoteBody, 
+    setNewNoteBody, 
+    onDeleteNote, 
+    onUpdateNote, 
+}) => {
     return(
         <div>
             <button onClick={onAddNote}>Create Note</button>
@@ -14,7 +23,7 @@ const NoteList = ({ notes, onAddNote, newNoteTitle, setNewNoteTitle, newNoteBody
                             title={note.title} 
                             bodyText={note.bodyText} 
                             onDeleteNote={() => onDeleteNote(note.noteId)}
-                            onUpdateNote={() => onUpdateNote(note.noteId)}
+                            onUpdateNote={(updatedNote) => onUpdateNote(note.noteId, updatedNote)}
                         />
                     )
                 }).reverse()
