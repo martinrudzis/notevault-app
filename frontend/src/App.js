@@ -6,9 +6,6 @@ import NoteList from './components/notelist/NoteList';
 const App = () => {
   // State to hold the notes data
   const [notes, setNotes] = useState([]);
-  const [newNoteTitle, setNewNoteTitle] = useState('');
-  const [newNoteBody, setNewNoteBody] = useState('');
-
 
   const getNotes = async () => {
     try {
@@ -21,16 +18,10 @@ const App = () => {
   }
 
   // Function to add a new note via a POST request
-  const addNote = async () => {
-    const newNote = {
-      title: newNoteTitle,
-      bodyText: newNoteBody,
-    };
+  const addNote = async (newNote) => {
     try {
       setNotes([...notes, newNote]);
       await api.post('/api/notes', newNote);
-      setNewNoteTitle('');
-      setNewNoteBody('');
     } catch (error) {
       console.error(error);
     }
@@ -64,14 +55,10 @@ const App = () => {
 
   return (
     <div>
-      <h1>App</h1>
+      <h1></h1>
       <NoteList
         notes={notes}
-        onAddNote={addNote}
-        newNoteTitle={newNoteTitle}
-        setNewNoteTitle={setNewNoteTitle}
-        newNoteBody={newNoteBody}
-        setNewNoteBody={setNewNoteBody}
+        onAddNote={(newNote) => addNote(newNote)}
         onDeleteNote={deleteNote}
         onUpdateNote={(noteId, updatedNote) => updateNote(noteId, updatedNote)}
       />
