@@ -45,8 +45,11 @@ const Note = ({
   };
 
   return (
-    <Card sx={{ minWidth: 300, border: "1px solid rgba(211,211,211,0.6)" }}>
-      <CardHeader
+    <Card sx={{ minWidth: 300, margin: 1, borderRadius: 1 }}>
+      <IconButton onClick={handleEditModalOpen} aria-label="edit" size="small">
+        {title}
+      </IconButton>
+      {/* <CardHeader
         title={
           <>
             <IconButton onClick={handleEditModalOpen} aria-label="edit" size="small">
@@ -61,10 +64,15 @@ const Note = ({
             </IconButton>
           </>
         }
-      />
+      /> */}
       {/* Edit Note Modal */}
       <Dialog open={editModalOpen} onClose={handleEditModalClose} fullWidth maxWidth="md">
-        <DialogTitle>Edit Note</DialogTitle>
+        <DialogTitle>
+          Edit Note
+          <IconButton onClick={() => onDeleteNote()} aria-label="delete" size="small">
+            <DeleteIcon />
+          </IconButton>
+        </DialogTitle>
         <DialogContent>
           <TextField
             fullWidth
