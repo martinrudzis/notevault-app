@@ -1,14 +1,8 @@
 import React, { useState } from 'react';
 import Card from "@mui/material/Card";
-import Collapse from "@mui/material/Collapse";
 import CardHeader from "@mui/material/CardHeader";
-import CardContent from "@mui/material/CardContent";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
 import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -19,67 +13,66 @@ import ReactQuill from 'react-quill';
 import NoteEditor, { modules, formats } from '../noteeditor/NoteEditor'
 import "react-quill/dist/quill.snow.css";
 
-const Note = ({title, bodyText, onDeleteNote, onUpdateNote, setEditModalOpen}) => {
-    const [isExpanded, setIsExpanded] = useState(false);
-    const [editModalOpen, setEditModalOpenLocal] = useState(false);
-    const [newTitle, setNewTitle] = useState(title);
-    const [newBodyText, setNewBodyText] = useState(bodyText);
+const Note = ({ 
+  title, 
+  bodyText, 
+  onDeleteNote, 
+  onUpdateNote, 
+}) => {
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [newTitle, setNewTitle] = useState(title);
+  const [newBodyText, setNewBodyText] = useState(bodyText);
 
-    const handleEditModalOpen = () => {
-      setEditModalOpenLocal(true);
-    }
+  const handleEditModalOpen = () => {
+    setEditModalOpen(true);
+  };
 
-    const handleEditModalClose = () => {
-      setEditModalOpenLocal(false);
-    }
+  const handleEditModalClose = () => {
+    setEditModalOpen(false);
+  };
 
-    const handleSaveChanges = async () => {
-      const updatedNote = {
-        title: newTitle,
-        bodyText: newBodyText,
-      };
-      try {
-        await api.put(`/api/notes/id/${noteId}`, updatedNote);
-        // Close the modal after successful PUT request
-        setEditModalOpen(false);
-      } catch (error) {
-        console.error(error);
-      }
+  const handleSaveChanges = async () => {
+    const updatedNote = {
+      title: newTitle,
+      bodyText: newBodyText,
     };
+    try {
+      await onUpdateNote(updatedNote);
+      setEditModalOpen(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-    return (
-      <Card sx={{ minWidth: 300, border: "1px solid rgba(211,211,211,0.6)" }}>
-      <CardHeader
-        title={title}
+  return (
+    <Card sx={{ minWidth: 300, margin: 1, borderRadius: 1 }}>
+      <IconButton onClick={handleEditModalOpen} aria-label="edit" size="small">
+        {title}
+      </IconButton>
+      {/* <CardHeader
+        title={
+          <>
+            <IconButton onClick={handleEditModalOpen} aria-label="edit" size="small">
+              {title}
+            </IconButton>
+          </>
+        }
         action={
           <>
             <IconButton onClick={() => onDeleteNote()} aria-label="delete" size="small">
               <DeleteIcon />
             </IconButton>
-            <IconButton onClick={handleEditModalOpen} aria-label="edit" size="small">
-              <EditIcon />
-            </IconButton>
-            <IconButton
-              onClick={() => setIsExpanded(!isExpanded)}
-              aria-label="expand"
-              size="small"
-            >
-              {isExpanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-            </IconButton>
           </>
         }
-      />
-      <div style={{ backgroundColor: "rgba(211,211,211,0.4)" }}>
-        <Collapse in={isExpanded} timeout="auto" unmountOnExit>
-          <CardContent>
-            <Typography variant="body1">{bodyText}</Typography>
-          </CardContent>
-        </Collapse>
-      </div>
-
+      /> */}
       {/* Edit Note Modal */}
       <Dialog open={editModalOpen} onClose={handleEditModalClose} fullWidth maxWidth="md">
-        <DialogTitle>Edit Note</DialogTitle>
+        <DialogTitle>
+          Edit Note
+          <IconButton onClick={() => onDeleteNote()} aria-label="delete" size="small">
+            <DeleteIcon />
+          </IconButton>
+        </DialogTitle>
         <DialogContent>
           <TextField
             fullWidth

@@ -2,22 +2,11 @@ import './App.css';
 import React, { useEffect, useState } from 'react';
 import api from './api/axiosConfig';
 import NoteList from './components/notelist/NoteList';
+import { Box } from '@mui/material';
 
 const App = () => {
   // State to hold the notes data
   const [notes, setNotes] = useState([]);
-  const [newNoteTitle, setNewNoteTitle] = useState('');
-  const [newNoteBody, setNewNoteBody] = useState('');
-  const [editModalOpen, setEditModalOpen] = useState(false);
-
-  const openEditModal = () => {
-    setEditModalOpen(true);
-  };
-
-  const closeEditModal = () => {
-    setEditModalOpen(false);
-  };
-
 
   const getNotes = async () => {
     try {
@@ -30,28 +19,19 @@ const App = () => {
   }
 
   // Function to add a new note via a POST request
-  const addNote = async () => {
-    const newNote = {
-      title: newNoteTitle,
-      bodyText: newNoteBody,
-    };
+  const addNote = async (newNote) => {
     try {
       setNotes([...notes, newNote]);
       await api.post('/api/notes', newNote);
-      setNewNoteTitle('');
-      setNewNoteBody('');
     } catch (error) {
       console.error(error);
     }
   };
 
-  const updateNote = async (noteId) => {
-    const updatedNote = {
-      title: newNoteTitle,
-      bodyText: newNoteBody,
-    };
+  const updateNote = async (noteId, updatedNote) => {
     try {
       await api.put(`/api/notes/id/${noteId}`, updatedNote);
+      setNotes([...notes, updatedNote]);
     } catch (error) {
       console.error(error)
     }
@@ -75,21 +55,24 @@ const App = () => {
   }, [])
 
   return (
-    <div>
-      <h1>App</h1>
+    <Box 
+      sx={{
+        p: 2,
+        bgcolor: 'white',
+        boxShadow: 3,
+        borderRadius: 2,
+        width: '100%',
+        maxWidth: 'calc(100% - 2in)',
+        margin: 8,
+      }}
+    >
       <NoteList
         notes={notes}
-        onAddNote={addNote}
-        newNoteTitle={newNoteTitle}
-        setNewNoteTitle={setNewNoteTitle}
-        newNoteBody={newNoteBody}
-        setNewNoteBody={setNewNoteBody}
+        onAddNote={(newNote) => addNote(newNote)}
         onDeleteNote={deleteNote}
-        onUpdateNote={updateNote}
-        editModalOpen={editModalOpen}
-        setEditModalOpen={setEditModalOpen}
+        onUpdateNote={(noteId, updatedNote) => updateNote(noteId, updatedNote)}
       />
-    </div>
+    </Box>
   );
 };
 
