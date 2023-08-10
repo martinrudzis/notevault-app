@@ -2,6 +2,7 @@ import './App.css';
 import React, { useEffect, useState } from 'react';
 import api from './api/axiosConfig';
 import NoteList from './components/notelist/NoteList';
+import NoteEditor from './components/noteeditor/NoteEditor';
 import { Box } from '@mui/material';
 
 const App = () => {
@@ -19,7 +20,11 @@ const App = () => {
   }
 
   // Function to add a new note via a POST request
-  const addNote = async (newNote) => {
+  const addNote = async (noteTitle, noteBody) => {
+    const newNote = {
+      title: noteTitle,
+      bodyText: noteBody,
+    };
     try {
       setNotes([...notes, newNote]);
       await api.post('/api/notes', newNote);
@@ -28,10 +33,18 @@ const App = () => {
     }
   };
 
-  const updateNote = async (noteId, updatedNote) => {
+  const updateNote = async (noteId, noteTitle, noteBody) => {
+    const updatedNote = {
+      title: noteTitle,
+      bodyText: noteBody,
+    };
     try {
+      // Update the notes state by filtering out the original note
+      setNotes(prevNotes => {
+        const updatedNotes = prevNotes.filter((note) => note.noteId !== noteId);
+        return [...updatedNotes, updatedNote];
+      });
       await api.put(`/api/notes/id/${noteId}`, updatedNote);
-      setNotes([...notes, updatedNote]);
     } catch (error) {
       console.error(error)
     }
@@ -55,24 +68,57 @@ const App = () => {
   }, [])
 
   return (
-    <Box 
-      sx={{
-        p: 2,
-        bgcolor: 'white',
-        boxShadow: 3,
-        borderRadius: 2,
-        width: '100%',
-        maxWidth: 'calc(100% - 2in)',
-        margin: 8,
-      }}
-    >
-      <NoteList
-        notes={notes}
-        onAddNote={(newNote) => addNote(newNote)}
-        onDeleteNote={deleteNote}
-        onUpdateNote={(noteId, updatedNote) => updateNote(noteId, updatedNote)}
-      />
-    </Box>
+    <div style={{ 
+      display: 'flex', 
+      justifyContent: 'center', 
+      alignItems: 'center', 
+      height: '100vh' 
+    }}>
+      <Box 
+        sx={{
+          paddingTop: 2,
+          paddingBottom: 5,
+          paddingLeft: 4,
+          paddingRight: 1,
+          bgcolor: 'white',
+          boxShadow:'0px 0px 10px rgba(0, 0, 0, 0.2)',
+          borderRadius: 1,
+          width: '100%',
+          maxWidth: 'calc(100% - 2in)',
+          margin: 10,
+          overflow: 'hidden'
+        }}
+      >
+        <NoteEditor
+          dialogTitle={"+ Create Note"}
+          title={''}
+          isNewNote={true}
+          bodyText={''}
+          onAddNote={addNote}
+        /> 
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+        }}>
+          <Box
+            padding="16px"
+            bgcolor="silver"
+            borderRadius="8px"
+            width="99%"
+            height="50vh" // Set a fixed height for the scrollable area
+            overflow="auto" // Enable vertical scrolling
+          >
+            <NoteList
+              notes={notes}
+              onAddNote={addNote}
+              onDeleteNote={deleteNote}
+              onUpdateNote={updateNote}
+            />
+          </Box>
+        </div>
+      </Box>
+    </div>
   );
 };
 
