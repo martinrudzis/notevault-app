@@ -1,6 +1,7 @@
 import './App.css';
 import React, { useEffect, useState } from 'react';
 import api from './api/axiosConfig';
+import NavBar from './components/navbar/NavBar';
 import NoteList from './components/notelist/NoteList';
 import NoteEditor from './components/noteeditor/NoteEditor';
 import { Box } from '@mui/material';
@@ -73,17 +74,21 @@ const App = () => {
       justifyContent: 'center', 
       alignItems: 'center', 
       height: '100vh' 
-    }}>
+    }}
+      className="app-container"
+    >
+      <div className="gradient-overlay"></div>
+      <NavBar />
       <Box 
         sx={{
           paddingTop: 2,
           paddingBottom: 5,
           paddingLeft: 4,
-          paddingRight: 1,
+          paddingRight: 4,
           bgcolor: 'white',
           boxShadow:'0px 0px 10px rgba(0, 0, 0, 0.2)',
           borderRadius: 1,
-          width: '100%',
+          width: '67%',
           maxWidth: 'calc(100% - 2in)',
           margin: 10,
           overflow: 'hidden'
@@ -103,7 +108,7 @@ const App = () => {
         }}>
           <Box
             padding="16px"
-            bgcolor="silver"
+            bgcolor="inherit"
             borderRadius="8px"
             width="99%"
             height="50vh" // Set a fixed height for the scrollable area
